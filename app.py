@@ -6,8 +6,8 @@ from transformers import AutoModelForImageSegmentation, AutoProcessor
 import requests
 import io
 
-# Load Hugging Face model and processor
-model_name = 'https://huggingface.co/M-Montasser/Satellite-Segmentation-Pretrained/tree/main/model'  # Replace with your model URL
+# Load Hugging Face model and processor 
+model_name = 'M-Montasser/Satellite-Segmentation-Pretrained/model'  # Replace with your model URL
 model = AutoModelForImageSegmentation.from_pretrained(model_name)
 processor = AutoProcessor.from_pretrained(model_name)
 
