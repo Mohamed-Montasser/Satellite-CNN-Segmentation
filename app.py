@@ -4,7 +4,6 @@ from PIL import Image
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-import os
 
 # Define your model architecture (Assuming a U-Net model here)
 class UNet(nn.Module):
@@ -36,17 +35,19 @@ def load_model(model_path):
 
 # Set up Streamlit app title and description
 st.title('Satellite Image Water Body Segmentation')
-st.write("This app allows you to upload a satellite image and predicts water bodies using a pre-trained segmentation model.")
+st.write("This app allows you to upload a satellite image in TIFF format and predicts water bodies using a pre-trained segmentation model.")
 
 # Upload Image
-uploaded_file = st.file_uploader("Choose a satellite image", type=['png', 'jpg', 'jpeg', 'tiff'])
+uploaded_file = st.file_uploader("Choose a satellite image (TIFF format)", type=['tiff'])
 
 if uploaded_file is not None:
-    # Open image
+    # Open the TIFF image
     image = Image.open(uploaded_file)
+
+    # Display the uploaded image
     st.image(image, caption='Uploaded Image.', use_column_width=True)
 
-    # Preprocess image for the model (convert to tensor and normalize)
+    # Preprocess the image for the model (convert to tensor and normalize)
     image = np.array(image).astype(np.float32)
     image = torch.tensor(image).permute(2, 0, 1).unsqueeze(0)  # Change to (1, C, H, W)
     
