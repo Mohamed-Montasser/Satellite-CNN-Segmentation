@@ -2,14 +2,37 @@ import streamlit as st
 import numpy as np
 from PIL import Image
 import torch
-from transformers import AutoModelForImageSegmentation, AutoProcessor
-import requests
-import io
+import torch.nn as nn
+import torch.nn.functional as F
+import os
 
-# Load Hugging Face model and processor /model/best_model.pth
-model_name = 'M-Montasser/Satellite-Segmentation-Pretrained'  # Replace with your model URL
-model = AutoModelForImageSegmentation.from_pretrained(model_name)
-processor = AutoProcessor.from_pretrained(model_name)
+# Define your model architecture (Assuming a U-Net model here)
+class UNet(nn.Module):
+    def __init__(self):
+        super(UNet, self).__init__()
+        # Define your U-Net architecture (simplified version here)
+        self.encoder = nn.Sequential(
+            nn.Conv2d(11, 64, kernel_size=3, padding=1),  # Assuming 11 input channels
+            nn.ReLU(),
+            nn.Conv2d(64, 64, kernel_size=3, padding=1),
+            nn.ReLU(),
+        )
+        self.decoder = nn.Sequential(
+            nn.Conv2d(64, 1, kernel_size=3, padding=1),  # 1 output channel for binary segmentation
+            nn.Sigmoid(),
+        )
+
+    def forward(self, x):
+        x = self.encoder(x)
+        x = self.decoder(x)
+        return x
+
+# Load model from .pth file
+def load_model(model_path):
+    model = UNet()  # Initialize your model
+    model.load_state_dict(torch.load(model_path))  # Load the model weights
+    model.eval()  # Set the model to evaluation mode
+    return model
 
 # Set up Streamlit app title and description
 st.title('Satellite Image Water Body Segmentation')
@@ -23,23 +46,31 @@ if uploaded_file is not None:
     image = Image.open(uploaded_file)
     st.image(image, caption='Uploaded Image.', use_column_width=True)
 
-    # Preprocess image for the model
-    inputs = processor(images=image, return_tensors="pt")
+    # Preprocess image for the model (convert to tensor and normalize)
+    image = np.array(image).astype(np.float32)
+    image = torch.tensor(image).permute(2, 0, 1).unsqueeze(0)  # Change to (1, C, H, W)
+    
+    # Normalize the image if needed (example normalization)
+    image = image / 255.0  # Assuming input is in the range [0, 255]
+
+    # Load model from the .pth file
+    model_path = 'M-Montasser/Satellite-Segmentation-Pretrained/model/best_model.pth'  # Specify the path to your .pth file
+    model = load_model(model_path)
 
     # Make prediction
     with torch.no_grad():
-        outputs = model(**inputs)
-    
-    # Get the predicted segmentation mask
-    logits = outputs.logits
-    predicted_mask = torch.argmax(logits, dim=1).squeeze().cpu().numpy()
+        output = model(image)  # Forward pass
+
+    # Convert the output to a mask
+    predicted_mask = output.squeeze().cpu().numpy()
+    predicted_mask = (predicted_mask > 0.5).astype(np.uint8)  # Threshold for binary segmentation
 
     # Display the predicted mask
     st.subheader("Predicted Water Body Mask")
     st.image(predicted_mask, caption="Predicted Mask", use_column_width=True, clamp=True)
 
     # Show download link for the mask image
-    output_mask = Image.fromarray(predicted_mask.astype(np.uint8) * 255)
+    output_mask = Image.fromarray(predicted_mask * 255)  # Convert back to [0, 255]
     output_mask_path = '/tmp/output_mask.png'
     output_mask.save(output_mask_path)
     
