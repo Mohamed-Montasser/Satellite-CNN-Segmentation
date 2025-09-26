@@ -1,15 +1,14 @@
 import streamlit as st
 import numpy as np
-from PIL import Image
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
+import tifffile as tiff  # Import tifffile
+from PIL import Image
 
 # Define your model architecture (Assuming a U-Net model here)
 class UNet(nn.Module):
     def __init__(self):
         super(UNet, self).__init__()
-        # Define your U-Net architecture (simplified version here)
         self.encoder = nn.Sequential(
             nn.Conv2d(11, 64, kernel_size=3, padding=1),  # Assuming 11 input channels
             nn.ReLU(),
@@ -41,8 +40,8 @@ st.write("This app allows you to upload a satellite image in TIFF format and pre
 uploaded_file = st.file_uploader("Choose a satellite image (TIFF format)", type=['tiff'])
 
 if uploaded_file is not None:
-    # Open the TIFF image
-    image = Image.open(uploaded_file)
+    # Open the TIFF image using tifffile
+    image = tiff.imread(uploaded_file)
 
     # Display the uploaded image
     st.image(image, caption='Uploaded Image.', use_column_width=True)
