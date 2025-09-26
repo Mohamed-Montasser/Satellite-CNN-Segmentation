@@ -43,8 +43,11 @@ if uploaded_file is not None:
     # Open the TIFF image using tifffile
     image = tiff.imread(uploaded_file)
 
-    # Display the uploaded image
-    st.image(image, caption='Uploaded Image.', use_column_width=True)
+    # Check the shape of the image
+    st.write(f"Image Shape: {image.shape}")
+
+    # Display only the first channel (for example, the first band or RGB-like band)
+    st.image(image[:,:,0], caption='First Band', use_column_width=True, clamp=True)  # Adjust if needed
 
     # Preprocess the image for the model (convert to tensor and normalize)
     image = np.array(image).astype(np.float32)
