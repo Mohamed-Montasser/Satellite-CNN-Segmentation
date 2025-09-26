@@ -58,7 +58,7 @@ if uploaded_file is not None:
     image = image / 255.0  # Assuming input is in the range [0, 255]
 
     # Load model from the .pth file
-    model_path = 'M-Montasser/Satellite-Segmentation-Pretrained/model/best_model.pth'  # Specify the path to your .pth file
+    model_path = 'M-Montasser/Satellite-Segmentation-Pretrained'  # Specify the path to your .pth file
     model = AutoModelForImageSegmentation.from_pretrained(model_path)
     # Make prediction
     with torch.no_grad():
