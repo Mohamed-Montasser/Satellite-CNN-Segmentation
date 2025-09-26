@@ -59,7 +59,7 @@ if uploaded_file is not None:
 
     # Load model from the .pth file
     model_path = 'M-Montasser/Satellite-Segmentation-Pretrained'  # Specify the path to your .pth file
-    model = AutoModelForImageSegmentation.from_pretrained(model_name)
+    model = AutoModelForImageSegmentation.from_pretrained("best_model.pth")
     # Make prediction
     with torch.no_grad():
         output = model(image)  # Forward pass
