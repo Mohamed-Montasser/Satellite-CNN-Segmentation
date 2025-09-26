@@ -4,6 +4,7 @@ import torch
 import torch.nn as nn
 import tifffile as tiff  # Import tifffile
 from PIL import Image
+from transformers import AutoModelForImageSegmentation, AutoProcessor
 
 # Define your model architecture (Assuming a U-Net model here)
 class UNet(nn.Module):
@@ -58,8 +59,7 @@ if uploaded_file is not None:
 
     # Load model from the .pth file
     model_path = 'M-Montasser/Satellite-Segmentation-Pretrained'  # Specify the path to your .pth file
-    model = load_model(model_path)
-
+    model = AutoModelForImageSegmentation.from_pretrained(model_name)
     # Make prediction
     with torch.no_grad():
         output = model(image)  # Forward pass
