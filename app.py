@@ -7,7 +7,7 @@ import requests
 import io
 
 # Load Hugging Face model and processor 
-model_name = 'M-Montasser/Satellite-Segmentation-Pretrained/model'  # Replace with your model URL
+model_name = 'M-Montasser/Satellite-Segmentation-Pretrained/model/best_model.pth'  # Replace with your model URL
 model = AutoModelForImageSegmentation.from_pretrained(model_name)
 processor = AutoProcessor.from_pretrained(model_name)
 
