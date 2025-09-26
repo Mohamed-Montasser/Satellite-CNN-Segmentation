@@ -1,6 +1,5 @@
 streamlit
-transformers
 torch
-Pillow
 numpy
-requests
+Pillow
+libtiff
