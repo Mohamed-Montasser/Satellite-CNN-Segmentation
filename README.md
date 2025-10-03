@@ -19,15 +19,6 @@ A deep learning-powered Flask API for water body segmentation in satellite image
 - **Multi-format Output**: Base64 JSON response or downloadable PNG masks
 - **High Performance**: Trained on satellite imagery with >90% accuracy
 
-## 📋 Table of Contents
-
-- [Demo](#-demo)
-- [Installation](#-installation)
-- [Usage](#-usage)
-- [API Endpoints](#-api-endpoints)
-- [Input Requirements](#-input-requirements)
-- [License](#-license)
-
 ## 🎬 Demo
 
 ### Web Interface
