@@ -22,7 +22,6 @@ A deep learning-powered Flask API for water body segmentation in satellite image
 ## 📋 Table of Contents
 
 - [Demo](#-demo)
-- [Model Architecture](#-model-architecture)
 - [Installation](#-installation)
 - [Usage](#-usage)
 - [API Endpoints](#-api-endpoints)
